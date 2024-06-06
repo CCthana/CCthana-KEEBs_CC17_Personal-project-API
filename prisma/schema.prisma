@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique @db.VarChar(50)
+  userName  String  @unique @db.VarChar(50)
+  password  String  @db.VarChar(50)
+  firstName String? @db.VarChar(50)
+  lastName  String? @db.VarChar(50)
+  phone     String? @db.VarChar(20)
+  address   String? @db.VarChar(256)
+
+  cartItems CartItem[]
+  orders    Order[]
+}
+
+enum ProductType {
+  KEYBOARD
+  SWITCH
+  KEYCAP
+  ACCESSORIES
+}
+
+model Product {
+  id     Int         @id @default(autoincrement())
+  name   String      @map("product_name") @db.VarChar(50)
+  price  Decimal     @map("product_price")
+  detail String      @map("product_detail") @db.VarChar(256)
+  image  String      @map("product_image") @db.VarChar(256)
+  type   ProductType @map("product_type")
+
+  detailProducts DetailProduct[]
+  orderItems     OrderItem[]
+  cartitems CartItem[]
+}
+
+model DetailProduct {
+  id          Int    @id @default(autoincrement())
+  description String @db.VarChar(512) @map("detail_description")
+  photo       String @db.VarChar(256) @map("detail_photo")
+  secondphoto String @db.VarChar(256) @map("detail_second_photo")
+  productId   Int
+
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model CartItem {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  productId Int
+
+  user User @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  APPROVED
+  SHIPPING
+}
+
+model Order {
+  id      Int         @id @default(autoincrement())
+  date    DateTime    @default(now()) 
+  status  OrderStatus @default(PENDING)
+  payment String      @db.VarChar(256)
+  userId  Int
+
+  user User @relation(fields: [userId], references: [id])
+
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  amount    Int
+  price     Decimal
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  userName String @unique @db.VarChar(50)
+  password String @db.VarChar(50)
+}
