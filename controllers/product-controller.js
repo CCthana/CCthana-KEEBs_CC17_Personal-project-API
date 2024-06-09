@@ -48,4 +48,13 @@ productController.getAllAccess = async (req, res, next) => {
    }
 }
 
+productController.getProductById = async (req, res, next) => {
+   try {
+      const data = await productService.getProductById(+req.params.id)
+      res.status(200).json({ selectedProduct: data})
+   } catch (err) {
+      console.log(err)
+   }
+}
+
 module.exports = productController;

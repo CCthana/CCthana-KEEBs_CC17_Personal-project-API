@@ -20,4 +20,10 @@ productService.getAllAccess = () => prisma.product.findMany({where:{
    type: "ACCESSORIES"
 }})
 
+productService.getProductById = (productId) => prisma.product.findUnique({
+   where: {
+      id : productId
+   }
+})
+
 module.exports = productService;
