@@ -33,23 +33,18 @@ model Product {
   name   String      @map("product_name") @db.VarChar(50)
   price  Decimal     @map("product_price")
   detail String      @map("product_detail") @db.VarChar(256)
-  image  String      @map("product_image") @db.VarChar(256)
+  image  String?      @map("product_image") @db.VarChar(256)
   type   ProductType @map("product_type")
+  info String? @map("product_info") @db.VarChar(512)
+  photo String? @map("product_photo") @db.VarChar(256)
+  secondPhoto String? @map("product_second_photo") @db.VarChar(256)
+ 
 
-  detailProducts DetailProduct[]
   orderItems     OrderItem[]
   cartitems CartItem[]
 }
 
-model DetailProduct {
-  id          Int    @id @default(autoincrement())
-  description String @db.VarChar(512) @map("detail_description")
-  photo       String @db.VarChar(256) @map("detail_photo")
-  secondphoto String @db.VarChar(256) @map("detail_second_photo")
-  productId   Int
 
-  product Product @relation(fields: [productId], references: [id])
-}
 
 model CartItem {
   id        Int @id @default(autoincrement())

@@ -6,6 +6,8 @@ const notFoundMiddlwware = require('./middlewares/notfound');
 const errorMiddleware = require('./middlewares/error-middleware');
 
 const authRouter = require('./routes/auth-route');
+const morgan = require('morgan');
+const productRouter = require('./routes/product-route');
 
 const app = express();
 app.use(express.json());
@@ -13,8 +15,10 @@ app.use(express.json());
 
 
 app.use(cors());
+app.use(morgan('dev'));
 
 app.use('/auth', authRouter)
+app.use('/product', productRouter)
 
 
 
