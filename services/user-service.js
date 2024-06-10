@@ -14,4 +14,10 @@ userService.findUserById = userId => prisma.user.findUnique ({
    where: {id: userId}
 });
 
+userService.updateAddressById = (userId,data) => prisma.user.update ({
+   data,  
+   where:{id :userId}
+  
+})
+
 module.exports = userService;

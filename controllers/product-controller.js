@@ -53,7 +53,7 @@ productController.getProductById = async (req, res, next) => {
       const data = await productService.getProductById(+req.params.id)
       res.status(200).json({ selectedProduct: data})
    } catch (err) {
-      console.log(err)
+      next(err)
    }
 }
 
