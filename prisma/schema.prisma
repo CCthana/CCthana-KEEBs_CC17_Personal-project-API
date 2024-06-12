@@ -75,7 +75,6 @@ model Order {
 
 model OrderItem {
   id        Int     @id @default(autoincrement())
-  amount    Int
   price     Decimal
   orderId   Int
   productId Int
