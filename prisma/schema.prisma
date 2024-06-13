@@ -11,11 +11,12 @@ model User {
   id        Int     @id @default(autoincrement())
   email     String  @unique @db.VarChar(50)
   userName  String  @unique @db.VarChar(50)
-  password  String  
+  password  String
   firstName String? @db.VarChar(50)
   lastName  String? @db.VarChar(50)
   phone     String? @db.VarChar(20)
   address   String? @db.VarChar(256)
+  isAdmin   Boolean @default(false)
 
   cartItems CartItem[]
   orders    Order[]
@@ -29,29 +30,26 @@ enum ProductType {
 }
 
 model Product {
-  id     Int         @id @default(autoincrement())
-  name   String      @map("product_name") @db.VarChar(50)
-  price  Decimal     @map("product_price")
-  detail String      @map("product_detail") @db.VarChar(256)
-  image  String?      @map("product_image") @db.VarChar(256)
-  type   ProductType @map("product_type")
-  info String? @map("product_info") @db.VarChar(512)
-  photo String? @map("product_photo") @db.VarChar(256)
-  secondPhoto String? @map("product_second_photo") @db.VarChar(256)
- 
+  id          Int         @id @default(autoincrement())
+  name        String      @map("product_name") @db.VarChar(50)
+  price       Decimal     @map("product_price")
+  detail      String      @map("product_detail") @db.VarChar(256)
+  image       String?     @map("product_image") @db.VarChar(256)
+  type        ProductType @map("product_type")
+  info        String?     @map("product_info") @db.VarChar(512)
+  photo       String?     @map("product_photo") @db.VarChar(256)
+  secondPhoto String?     @map("product_second_photo") @db.VarChar(256)
 
-  orderItems     OrderItem[]
-  cartitems CartItem[]
+  orderItems OrderItem[]
+  cartitems  CartItem[]
 }
-
-
 
 model CartItem {
   id        Int @id @default(autoincrement())
   userId    Int
   productId Int
 
-  user User @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 }
 
@@ -63,7 +61,7 @@ enum OrderStatus {
 
 model Order {
   id      Int         @id @default(autoincrement())
-  date    DateTime    @default(now()) 
+  date    DateTime    @default(now())
   status  OrderStatus @default(PENDING)
   payment String      @db.VarChar(256)
   userId  Int
@@ -86,5 +84,5 @@ model OrderItem {
 model Admin {
   id       Int    @id @default(autoincrement())
   userName String @unique @db.VarChar(50)
-  password String @db.VarChar(50)
+  password String @db.VarChar(128)
 }

@@ -48,9 +48,9 @@ productController.getAllAccess = async (req, res, next) => {
    }
 }
 
-productController.getProductById = async (req, res, next) => {
+productController.getProductByName = async (req, res, next) => {
    try {
-      const data = await productService.getProductById(+req.params.id)
+      const data = await productService.getProductByName(req.params.productName)
       res.status(200).json({ selectedProduct: data})
    } catch (err) {
       next(err)

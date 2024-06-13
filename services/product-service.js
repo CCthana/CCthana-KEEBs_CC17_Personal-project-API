@@ -20,9 +20,9 @@ productService.getAllAccess = () => prisma.product.findMany({where:{
    type: "ACCESSORIES"
 }})
 
-productService.getProductById = (productId) => prisma.product.findUnique({
+productService.getProductByName = (productName) => prisma.product.findFirst({
    where: {
-      id : productId
+      name : productName
    }
 })
 
