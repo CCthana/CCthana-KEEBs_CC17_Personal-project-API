@@ -1,14 +1,15 @@
 const express = require('express');
 const userController = require('../controllers/user-controller');
 const upload = require('../middlewares/upload');
+const authenicate = require('../middlewares/authenicate');
 
 
 const userRouter =  express.Router();
 
 
-userRouter.patch('/address/:id', userController.updateAddressById)
+userRouter.patch('/address/:id', authenicate, userController.updateAddressById)
 
-userRouter.patch('/upload', upload.single('image'), userController.upload)
+userRouter.patch('/upload', authenicate,  upload.single('image'), userController.upload)
 
 
 

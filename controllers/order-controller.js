@@ -23,8 +23,7 @@ orderController.getUserOrder = async (req, res, next) => {
    try {
       const userId = +req.params.userId
       const result = await orderService.getUserOrder(userId)
-      console.log(result)
-
+  
       res.status(200).json({message: result})
    } catch (err) {
       next(err)

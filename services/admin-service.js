@@ -6,6 +6,12 @@ adminService.findUserByAccount = (userName) =>
     where: { userName: userName },
   });
 
+  
+adminService.findUserById = (id) =>
+  prisma.admin.findUnique({
+    where: { id: id },
+  });
+
 adminService.getAllOrder = () =>
   prisma.order.findMany({
     include: {

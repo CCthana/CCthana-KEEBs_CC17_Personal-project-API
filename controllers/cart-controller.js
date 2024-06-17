@@ -6,7 +6,7 @@ cartController.addToCart =  async (req, res ,next) => {
    try {
       const data = req.body
       const result = await cartService.addItemToCart(data)
-      console.log(result);
+    
       res.status(201).json({message: 'added to cart'})
       
    } catch (err) {

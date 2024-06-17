@@ -10,7 +10,7 @@ adminController.login = async (req, res, next) => {
 try {
    
    const data = req.body
-   console.log(data)
+
    const existUser = await adminService.findUserByAccount(data.userName);
 
       if(!existUser) {

@@ -44,8 +44,8 @@ authController.login =  async (req, res, next) => {
       if(!isMatch){
          createError({message: 'invalid password', statusCode: 400});
       }
-
-      const accessToken = jwtService.sign({id: existUser.id});
+      console.log(existUser)
+      const accessToken = jwtService.sign({id: existUser.id, isAdmin : existUser.isAdmin});
          res.status(200).json({ accessToken });
 
    } catch (err) {
