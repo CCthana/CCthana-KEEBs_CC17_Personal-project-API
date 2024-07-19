@@ -7,84 +7,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model admin {
-  id       Int    @id @default(autoincrement())
-  userName String @unique(map: "Admin_userName_key") @db.VarChar(50)
-  password String @db.VarChar(128)
-}
-
-model cartitem {
+model User {
   id        Int     @id @default(autoincrement())
-  userId    Int
-  productId Int
-  product   product @relation(fields: [productId], references: [id], map: "CartItem_productId_fkey")
-  user      user    @relation(fields: [userId], references: [id], map: "CartItem_userId_fkey")
-
-  @@index([productId], map: "CartItem_productId_fkey")
-  @@index([userId], map: "CartItem_userId_fkey")
-}
-
-model order {
-  id        Int          @id @default(autoincrement())
-  date      DateTime     @default(now())
-  status    order_status @default(PENDING)
-  payment   String       @db.VarChar(256)
-  userId    Int
-  user      user         @relation(fields: [userId], references: [id], map: "Order_userId_fkey")
-  orderitem orderitem[]
-
-  @@index([userId], map: "Order_userId_fkey")
-}
-
-model orderitem {
-  id        Int     @id @default(autoincrement())
-  price     Decimal
-  orderId   Int
-  productId Int
-  order     order   @relation(fields: [orderId], references: [id], map: "OrderItem_orderId_fkey")
-  product   product @relation(fields: [productId], references: [id], map: "OrderItem_productId_fkey")
-
-  @@index([orderId], map: "OrderItem_orderId_fkey")
-  @@index([productId], map: "OrderItem_productId_fkey")
-}
-
-model product {
-  id                   Int                  @id @default(autoincrement())
-  product_name         String               @db.VarChar(50)
-  product_price        Decimal
-  product_detail       String               @db.VarChar(256)
-  product_image        String?              @db.VarChar(256)
-  product_type         product_product_type
-  product_info         String?              @db.VarChar(512)
-  product_photo        String?              @db.VarChar(256)
-  product_second_photo String?              @db.VarChar(256)
-  cartitem             cartitem[]
-  orderitem            orderitem[]
-}
-
-model user {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique(map: "User_email_key") @db.VarChar(50)
-  userName  String     @unique(map: "User_userName_key") @db.VarChar(50)
+  email     String  @unique @db.VarChar(50)
+  userName  String  @unique @db.VarChar(50)
   password  String
-  firstName String?    @db.VarChar(50)
-  lastName  String?    @db.VarChar(50)
-  phone     String?    @db.VarChar(20)
-  address   String?    @db.VarChar(256)
-  isAdmin   Boolean    @default(false)
-  cartitem  cartitem[]
-  order     order[]
+  firstName String? @db.VarChar(50)
+  lastName  String? @db.VarChar(50)
+  phone     String? @db.VarChar(20)
+  address   String? @db.VarChar(256)
+  isAdmin   Boolean @default(false)
+
+  cartItems CartItem[]
+  orders    Order[]
 }
 
-enum order_status {
+enum ProductType {
+  KEYBOARD
+  SWITCH
+  KEYCAP
+  ACCESSORIES
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String      @map("product_name") @db.VarChar(50)
+  price       Decimal     @map("product_price")
+  detail      String      @map("product_detail") @db.VarChar(256)
+  image       String?     @map("product_image") @db.VarChar(256)
+  type        ProductType @map("product_type")
+  info        String?     @map("product_info") @db.VarChar(512)
+  photo       String?     @map("product_photo") @db.VarChar(256)
+  secondPhoto String?     @map("product_second_photo") @db.VarChar(256)
+
+  orderItems OrderItem[]
+  cartitems  CartItem[]
+}
+
+model CartItem {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  productId Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
   PENDING
   APPROVED
   SHIPPING
 }
 
-enum product_product_type {
-  KEYBOARD
-  SWITCH
-  KEYCAP
-  ACCESSORIES
+model Order {
+  id      Int         @id @default(autoincrement())
+  date    DateTime    @default(now())
+  status  OrderStatus @default(PENDING)
+  payment String      @db.VarChar(256)
+  userId  Int
+
+  user User @relation(fields: [userId], references: [id])
+
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  price     Decimal
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  userName String @unique @db.VarChar(50)
+  password String @db.VarChar(128)
 }
